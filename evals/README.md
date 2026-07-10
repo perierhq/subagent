@@ -51,7 +51,7 @@ Use the aside CLI (load the `aside-browser` skill) to search x.com for real-worl
 
 ## 3. Hands-on scoring
 
-- **cost** — what you *actually pay* (subscription plans, provider limits), with AA list prices as reference. Inherently personal; adjust for your own plans.
+- **cost** — scored from AA list prices (input-weighted blend, since agentic work is input-heavy), so anyone can reproduce it. Independent receipts about effective price (tokenizer inflation, quota burn) adjust the score. If your subscription makes a model effectively free, bump its cost score locally.
 - **taste** — UI/UX output, code quality, API design, copy. No public benchmark measures this; score from real use.
 
 ## Updating the rankings / adding a model

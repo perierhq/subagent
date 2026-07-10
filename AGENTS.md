@@ -22,9 +22,9 @@ A rating (re)evaluation has three mandatory inputs:
 
 2. **Public sentiment from X, shill-filtered.** Research what practitioners actually say on x.com using the aside CLI (load the `aside-browser` skill). Aggressively exclude paid promotion: sponsored/affiliated accounts, model-lab ambassadors and partners, launch-day hype threads, engagement farmers, and anyone whose praise never comes with receipts — plus everything on the disqualified-sources list above. Weight independent developers showing real work — transcripts, diffs, failure reports, "used it for two weeks" longitudinal takes. Negative reports are worth more than positive ones; nobody gets paid to complain.
 
-3. **Hands-on use.** Taste (UI/UX, code quality, API design, copy) and real cost (what we actually pay on our plans, not list price) can only come from using the model on real work.
+3. **Hands-on use.** Taste (UI/UX, code quality, API design, copy) can only come from using the model on real work.
 
-Synthesize all three into our own cost / intelligence / taste scores (1–9). When sources disagree, trust hands-on > shill-filtered sentiment > benchmarks.
+Synthesize into our own cost / intelligence / taste scores (1–9). **Cost is scored from AA list prices** (input-weighted blend — agentic work is input-heavy), so scores are reproducible for anyone; independent receipts about effective price (e.g. tokenizer inflation) adjust it. Users adjust locally for their own subscriptions. When sources disagree on intelligence/taste, trust hands-on > shill-filtered sentiment > benchmarks.
 
 Then: update the table in `skills/subagent/SKILL.md` (single source of truth), bump `VERSION` in `bin/subagent`, commit — users pick it up via `subagent update`.
 
