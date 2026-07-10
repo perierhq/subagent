@@ -27,7 +27,7 @@
 set -euo pipefail
 
 VERSION="0.5.0"
-REPO="kacperkwapisz/subagent"
+REPO="perierhq/subagent"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
 RUN_DIR="${TMPDIR:-/tmp}/subagent"
 SKILL_DIR="${SUBAGENT_SKILL_DIR:-$HOME/.agents/skills}/subagent"

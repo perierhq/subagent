@@ -9,7 +9,7 @@ subagent <model> [pi-args...] "prompt"
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/kacperkwapisz/subagent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/perierhq/subagent/main/install.sh | bash
 ```
 
 This installs two things:

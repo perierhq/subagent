@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # subagent installer — installs the CLI and the agent skill.
-#   curl -fsSL https://raw.githubusercontent.com/kacperkwapisz/subagent/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/perierhq/subagent/main/install.sh | bash
 #
 # Env overrides:
 #   SUBAGENT_INSTALL_DIR  CLI install dir        (default: ~/.local/bin)
@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-REPO="kacperkwapisz/subagent"
+REPO="perierhq/subagent"
 REF="${SUBAGENT_REF:-main}"
 BASE="https://raw.githubusercontent.com/$REPO/$REF"
 INSTALL_DIR="${SUBAGENT_INSTALL_DIR:-$HOME/.local/bin}"
