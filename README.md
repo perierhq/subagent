@@ -12,7 +12,14 @@ subagent <model> [pi-args...] "prompt"
 curl -fsSL https://raw.githubusercontent.com/kacperkwapisz/subagent/main/install.sh | bash
 ```
 
-Installs a single bash script to `~/.local/bin/subagent` (override with `SUBAGENT_INSTALL_DIR`). Requires `pi` on your PATH:
+This installs two things:
+
+1. **The CLI** → `~/.local/bin/subagent` (override with `SUBAGENT_INSTALL_DIR`)
+2. **The agent skill** → `~/.agents/skills/subagent/` (override with `SUBAGENT_SKILL_DIR`, skip with `SUBAGENT_NO_SKILL=1`) — teaches your agent model selection and delegation mechanics, loaded on demand so it costs no context until used
+
+Then paste the 3-line snippet from [`docs/AGENTS.md`](docs/AGENTS.md) into your global agent instructions (`~/.pi/agent/AGENTS.md`, `~/.claude/CLAUDE.md`, …) so your agent knows subagents exist and reaches for the skill.
+
+Requires `pi` on your PATH:
 
 ```sh
 npm install -g @earendil-works/pi-coding-agent
@@ -59,33 +66,24 @@ k2=moonshot/kimi-k2
 
 ## Picking the right model
 
-Rankings, higher = better. Cost reflects what I actually pay (OpenAI has really generous limits), not list price. Intelligence is how hard a problem you can hand the model unsupervised. Taste covers UI/UX, code quality, API design, and copy.
+The model rankings (cost / intelligence / taste) and delegation guidance live in the skill — [`skills/subagent/SKILL.md`](skills/subagent/SKILL.md) — which is the single source of truth. Short version:
 
-| model       | cost | intelligence | taste |
-|-------------|------|--------------|-------|
-| gpt-5.5     | 9    | 8            | 5     |
-| sonnet-5    | 5    | 5            | 7     |
-| opus-4.8    | 4    | 7            | 8     |
-| fable-5     | 2    | 9            | 9     |
+- **Bulk/mechanical work** → cheapest model that clears the bar (currently `gpt-5.5`)
+- **Anything user-facing** (UI, copy, API design) → high-taste model
+- **Reviews** → high-intelligence model, read-only (`-r`), ideally a different provider than the implementer
+- Defaults, not limits: judge the output, escalate when it doesn't meet the bar
 
-How to apply:
+Rankings come from hands-on use; [evals](evals/) to back them (and score new models) are in progress. When models change, the skill is updated and a re-run of the installer picks it up.
 
-- These are defaults, not limits. If a cheaper model's output doesn't meet the bar, rerun with a smarter model. Judge the output, not the price tag — escalating costs less than shipping mediocre work.
-- Cost is a tie-breaker only; when axes conflict for anything that ships, intelligence > taste > cost.
-- **Bulk/mechanical work** (clear-spec implementation, data analysis, migrations): `gpt-5.5` — it's effectively free.
-- **Anything user-facing** (UI, copy, API design) needs taste ≥ 7.
-- **Reviews** of plans/implementations: `fable-5` or `opus-4.8`, optionally `gpt-5.5` as an extra independent perspective.
-- Never use Haiku.
-- For work that doesn't require changes (investigation, review, data analysis), add `-r` for read-only tools.
-- For long prompts/specs, write them to a file and pass with `@spec.md` instead of inlining. For hard unsupervised problems, add `--thinking high` (or `xhigh`).
-- Long-running agents: use `--bg <name>` and poll with `tail` instead of blocking. Run parallel independent subagents (e.g. multiple reviewers) concurrently, each with its own `--bg` name. For runs long enough that a crash would hurt, use raw `pi -p -n "<name>" …` (keeps the session) so it's resumable with `pi -r`.
-- When parsing output programmatically, add `--mode json` (newline-delimited events); plain `-p` output contains terminal escape codes.
+## How the pieces fit
 
-These rankings come from hands-on use; [evals](evals/) to back them (and cover new models) are in progress.
+| piece | where it goes | job |
+|---|---|---|
+| `bin/subagent` | `~/.local/bin` | spawn subagents with the right args |
+| `skills/subagent/SKILL.md` | `~/.agents/skills/subagent/` | model selection + mechanics, loaded on demand |
+| `docs/AGENTS.md` snippet | your global agent instructions | always-on nudge: "delegate via subagent, load the skill" |
 
-## Teaching your agents to use it
-
-Copy [`docs/AGENTS.md`](docs/AGENTS.md) (or the relevant section) into your global agent instructions (`~/.pi/agent/AGENTS.md`, `CLAUDE.md`, etc.) so your top-level agent knows when and how to delegate.
+This split keeps your always-on context tiny while the detailed guidance grows with the repo — updating models means editing one skill file and re-running the installer.
 
 ## License
 
