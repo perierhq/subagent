@@ -1,69 +1,180 @@
 #!/usr/bin/env bash
 # subagent — pi with the always-args baked in. Everything else passes through.
 #
-#   subagent <model> [pi-args...] "prompt"
+# Usage:
+#   subagent <model> [pi-args...] "prompt"     run a subagent (expands to: pi -p --no-session --model <model> ...)
+#   subagent ps                                list background agents
+#   subagent logs <name> [-f]                  show (or follow) a background agent's log
+#   subagent wait <name> [timeout-secs]        block until a background agent finishes; exit with its status
+#   subagent models                            list model shorthands (built-in + ~/.config/subagent/models)
+#   subagent update                            self-update the CLI (and skill, if installed)
+#   subagent version | help
 #
-# Expands to: pi -p --no-session --model <model> [pi-args...] "prompt"
-#
-# Model shorthands (built-in): gpt-* → openai-codex/gpt-*;
-#   sonnet-*/opus-*/fable-*/haiku-* → anthropic/claude-*
-# Custom shorthands: ~/.config/subagent/models, one `shorthand=provider/model` per line.
-# Extras:
+# Run flags:
 #   -r, --ro          read-only tools (read,grep,find,ls)
-#   --bg <name>       run in background, log to /tmp/agent-<name>.log, print PID + log path
-#   --version         print version
+#   --bg <name>       run in background; log: /tmp/agent-<name>.log
+#
+# Model shorthands: gpt-* → openai-codex/gpt-*; sonnet-*/opus-*/fable-*/haiku-* → anthropic/claude-*;
+# names with "/" pass through; custom mappings in ~/.config/subagent/models (shorthand=provider/model).
 #
 # Examples:
 #   subagent gpt-5.5 "Task: implement the spec"
 #   subagent fable-5 -r "review the diff on this branch"
 #   subagent gpt-5.5 --thinking high @spec.md --bg worker "Task: implement the spec"
+#   subagent wait worker && subagent logs worker
 
 set -euo pipefail
 
-VERSION="0.1.0"
+VERSION="0.2.0"
+REPO="kacperkwapisz/subagent"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
+RUN_DIR="${TMPDIR:-/tmp}/subagent"
+SKILL_DIR="${SUBAGENT_SKILL_DIR:-$HOME/.agents/skills}/subagent"
 
-usage() { sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'; }
+log_path()  { echo "/tmp/agent-$1.log"; }
+pid_path()  { echo "$RUN_DIR/$1.pid"; }
+err()       { echo "subagent: $*" >&2; exit 1; }
+usage()     { sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'; }
 
-[[ $# -ge 1 ]] || { usage; exit 1; }
-case "$1" in
-  -h|--help) usage; exit 0 ;;
-  --version) echo "subagent $VERSION"; exit 0 ;;
+resolve_model() {
+  local m="$1" resolved=""
+  if [[ -f "$CONFIG" ]]; then
+    resolved="$(sed -n "s/^${m}=//p" "$CONFIG" | head -1)"
+  fi
+  if [[ -n "$resolved" ]]; then m="$resolved"
+  else
+    case "$m" in
+      */*) ;; # already provider-qualified
+      gpt-*)                           m="openai-codex/$m" ;;
+      sonnet-*|opus-*|fable-*|haiku-*) m="anthropic/claude-$m" ;;
+    esac
+  fi
+  echo "$m"
+}
+
+agent_state() { # <name> — sets AGENT_PID and AGENT_STATE (running|done)
+  AGENT_PID="$(cat "$(pid_path "$1")" 2>/dev/null || true)"
+  if [[ -n "$AGENT_PID" ]] && kill -0 "$AGENT_PID" 2>/dev/null; then AGENT_STATE=running; else AGENT_STATE=done; fi
+}
+
+cmd_ps() {
+  local found=0 name
+  shopt -s nullglob
+  for f in "$RUN_DIR"/*.pid; do
+    found=1
+    name="$(basename "$f" .pid)"
+    agent_state "$name"
+    printf '%-20s %-8s pid=%-8s log=%s\n' "$name" "$AGENT_STATE" "${AGENT_PID:--}" "$(log_path "$name")"
+  done
+  [[ $found -eq 1 ]] || echo "no background agents"
+}
+
+cmd_logs() {
+  local name="${1:-}"; [[ -n "$name" ]] || err "usage: subagent logs <name> [-f]"
+  local log; log="$(log_path "$name")"
+  [[ -f "$log" ]] || err "no log for '$name' ($log)"
+  if [[ "${2:-}" == "-f" ]]; then tail -f "$log"; else cat "$log"; fi
+}
+
+cmd_wait() {
+  local name="${1:-}"; [[ -n "$name" ]] || err "usage: subagent wait <name> [timeout-secs]"
+  local timeout="${2:-0}" waited=0
+  [[ -f "$(pid_path "$name")" ]] || err "unknown agent '$name' (no pidfile in $RUN_DIR)"
+  agent_state "$name"
+  while [[ "$AGENT_STATE" == "running" ]]; do
+    agent_state "$name"
+    sleep 1; waited=$((waited + 1))
+    if [[ "$timeout" -gt 0 && $waited -ge $timeout ]]; then
+      echo "timeout: '$name' still running (pid=$AGENT_PID)" >&2; exit 124
+    fi
+  done
+  local status=0
+  [[ -f "$RUN_DIR/$name.exit" ]] && status="$(cat "$RUN_DIR/$name.exit")"
+  echo "done: '$name' exit=$status log=$(log_path "$name")"
+  exit "$status"
+}
+
+cmd_models() {
+  echo "built-in prefixes:"
+  echo "  gpt-*                          -> openai-codex/gpt-*"
+  echo "  sonnet-*|opus-*|fable-*|haiku-* -> anthropic/claude-*"
+  echo "  anything with '/'              -> passed through unchanged"
+  if [[ -s "$CONFIG" ]]; then
+    echo "custom ($CONFIG):"
+    sed 's/^/  /' "$CONFIG"
+  else
+    echo "custom: none ($CONFIG not found — one 'shorthand=provider/model' per line)"
+  fi
+}
+
+cmd_update() {
+  command -v curl >/dev/null || err "curl is required to update"
+  local base="https://raw.githubusercontent.com/$REPO/${SUBAGENT_REF:-main}"
+  local self; self="$(command -v subagent || echo "$0")"
+  self="$(cd "$(dirname "$self")" && pwd)/$(basename "$self")"
+  local tmp; tmp="$(mktemp)"
+  trap 'rm -f "$tmp"' EXIT
+
+  echo "current: $VERSION ($self)"
+  curl -fsSL "$base/bin/subagent" -o "$tmp" || err "download failed"
+  bash -n "$tmp" || err "downloaded script failed syntax check; aborting"
+  local new_version
+  new_version="$(sed -n 's/^VERSION="\(.*\)"/\1/p' "$tmp" | head -1)"
+  if [[ "$new_version" == "$VERSION" ]]; then
+    echo "already up to date ($VERSION)"
+  else
+    install -m 0755 "$tmp" "$self"
+    echo "updated CLI: $VERSION -> $new_version"
+  fi
+
+  if [[ -d "$SKILL_DIR" ]]; then
+    curl -fsSL "$base/skills/subagent/SKILL.md" -o "$SKILL_DIR/SKILL.md" \
+      && echo "updated skill: $SKILL_DIR/SKILL.md" \
+      || echo "warning: skill update failed" >&2
+  fi
+}
+
+cmd_run() {
+  command -v pi >/dev/null || err "'pi' not found on PATH. Install: npm install -g @earendil-works/pi-coding-agent"
+  [[ $# -ge 2 ]] || { usage; exit 1; }
+
+  local model; model="$(resolve_model "$1")"; shift
+  local bg_name=""
+  local args=(-p --no-session --model "$model")
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -r|--ro) args+=(--tools read,grep,find,ls); shift ;;
+      --bg)    [[ $# -ge 2 ]] || err "--bg requires a name"; bg_name="$2"; shift 2 ;;
+      *)       args+=("$1"); shift ;;
+    esac
+  done
+
+  if [[ -n "$bg_name" ]]; then
+    [[ "$bg_name" =~ ^[A-Za-z0-9._-]+$ ]] || err "--bg name must be alphanumeric/._- (got '$bg_name')"
+    mkdir -p "$RUN_DIR"
+    if [[ -f "$(pid_path "$bg_name")" ]]; then
+      agent_state "$bg_name"
+      [[ "$AGENT_STATE" == "running" ]] && err "agent '$bg_name' is already running (pid=$AGENT_PID). Pick another name or: subagent wait $bg_name"
+    fi
+    local log; log="$(log_path "$bg_name")"
+    rm -f "$RUN_DIR/$bg_name.exit"
+    ( set +e; pi "${args[@]}" > "$log" 2>&1; echo "$?" > "$RUN_DIR/$bg_name.exit" ) &
+    echo "$!" > "$(pid_path "$bg_name")"
+    echo "started '$bg_name' pid=$(cat "$(pid_path "$bg_name")") log=$log"
+    echo "check:  subagent logs $bg_name [-f]   wait: subagent wait $bg_name"
+  else
+    exec pi "${args[@]}"
+  fi
+}
+
+case "${1:-}" in
+  ""|-h|--help|help) usage; exit 0 ;;
+  --version|version) echo "subagent $VERSION"; exit 0 ;;
+  update)            shift; cmd_update "$@" ;;
+  models)            shift; cmd_models "$@" ;;
+  ps)                shift; cmd_ps "$@" ;;
+  logs)              shift; cmd_logs "$@" ;;
+  wait)              shift; cmd_wait "$@" ;;
+  *)                 cmd_run "$@" ;;
 esac
-[[ $# -ge 2 ]] || { usage; exit 1; }
-
-model="$1"; shift
-
-# 1) user-defined shorthands, 2) built-in prefixes, 3) pass through as-is
-resolved=""
-if [[ -f "$CONFIG" ]]; then
-  resolved="$(sed -n "s/^${model}=//p" "$CONFIG" | head -1)"
-fi
-if [[ -n "$resolved" ]]; then
-  model="$resolved"
-else
-  case "$model" in
-    */*) ;; # already provider-qualified
-    gpt-*)                           model="openai-codex/$model" ;;
-    sonnet-*|opus-*|fable-*|haiku-*) model="anthropic/claude-$model" ;;
-  esac
-fi
-
-bg_name=""
-args=(-p --no-session --model "$model")
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -r|--ro) args+=(--tools read,grep,find,ls); shift ;;
-    --bg)    bg_name="$2"; shift 2 ;;
-    *)       args+=("$1"); shift ;;
-  esac
-done
-
-if [[ -n "$bg_name" ]]; then
-  log="/tmp/agent-$bg_name.log"
-  pi "${args[@]}" > "$log" 2>&1 &
-  echo "pid=$! log=$log"
-else
-  exec pi "${args[@]}"
-fi
