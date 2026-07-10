@@ -6,6 +6,13 @@ The model rankings in [`skills/subagent/SKILL.md`](../skills/subagent/SKILL.md) 
 2. **Shill-filtered public sentiment from X** — what independent practitioners actually report
 3. **Hands-on use** — taste and real subscription cost
 
+**Benchmark allowlist (only these are scored):**
+
+1. **Artificial Analysis** — all coding-relevant indices, via `aa-fetch.sh`
+2. **CursorBench** — scores only, not Cursor's editorial; Cursor-disclosed contaminated scores are dropped
+
+Everything else is unscored. Independent evaluator reports (METR etc.) may add qualitative risk notes next to a rating, never move a score. If an allowlisted composite ever includes a SWE-Bench variant, use the individual non-SWE columns instead.
+
 **Disqualified sources (never counted, in any direction):**
 
 - Anything a model's own provider says about its model — launch posts, self-reported benchmarks, system cards, employee/DevRel posts, partner testimonials.

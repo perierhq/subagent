@@ -4,6 +4,13 @@
 
 Never rate a model off a single benchmark number, and never copy a leaderboard rank into our table.
 
+**Benchmark allowlist — only these benchmark sources are scored in evals:**
+
+1. **Artificial Analysis** — all coding-relevant indices (via `evals/aa-fetch.sh`).
+2. **CursorBench** — scores only, never Cursor's editorial commentary (they have launch partnerships with labs); scores Cursor themselves disclose as contaminated are dropped.
+
+Every other benchmark is unscored, whoever runs it. Independent evaluator reports (METR etc.) may inform qualitative risk notes next to a rating (e.g. ⚠️ eval-gaming behavior) but never move a score. If an allowlisted source ever folds a SWE-Bench variant into a composite, use its individual non-SWE columns instead.
+
 **Disqualified sources — never count these, in any direction:**
 
 - **Anything the model's own provider says about its model.** Launch posts, self-reported benchmarks, system cards, employee/DevRel posts, ambassador and partner testimonials. Biased by construction. Independent third parties only.
