@@ -5,7 +5,8 @@
 #   ./run-trial.sh --list                     list available tasks
 #
 # Tasks are an INTERNAL PRIVATE HOLDOUT (not in this repo, so models can't train on them).
-# Location: $SUBAGENT_TASKS_DIR (default: ~/.subagent/eval-tasks). Task layout:
+# They live in the private sibling repo `subagent-evals`, cloned next to this repo
+# (../subagent-evals/tasks), or wherever $SUBAGENT_TASKS_DIR points. Task layout:
 #
 #   <tasks-dir>/v1/<task-id>/
 #     task.md      # the prompt given to the model
@@ -16,7 +17,11 @@
 
 set -euo pipefail
 
-TASKS_DIR="${SUBAGENT_TASKS_DIR:-$HOME/.subagent/eval-tasks}"
+default_tasks_dir() {
+  local sibling; sibling="$(cd "$(dirname "$0")/../.." && pwd)/subagent-evals/tasks"
+  if [[ -d "$sibling" ]]; then echo "$sibling"; else echo "$HOME/.subagent/eval-tasks"; fi
+}
+TASKS_DIR="${SUBAGENT_TASKS_DIR:-$(default_tasks_dir)}"
 TRIALS_DIR="$(cd "$(dirname "$0")" && pwd)/trials"
 THINKING="${SUBAGENT_TRIAL_THINKING:-high}"   # pinned per suite version; record any override
 

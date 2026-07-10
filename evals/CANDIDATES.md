@@ -22,8 +22,7 @@ A candidate graduates only when all three pass. Record each trial in [`trials/`]
 1. **Intelligence — internal task suite.** Run the private holdout tasks (`./run-trial.sh <model>
    v1/int-1`, `v1/int-2`, `v1/agent-1`) — mechanically checked (tests + invariants), reproducible,
    and private so models can't train on them (same reason CursorBench keeps its tasks secret).
-   Task content lives in `$SUBAGENT_TASKS_DIR` (default `~/.subagent/eval-tasks`), never in this
-   repo; only task IDs and pass/fail results are public in `trials/`. Supplement with real-work
+   Task content lives in the private sibling repo `subagent-evals` (clone next to this repo), never here; only task IDs and pass/fail results are public in `trials/`. Supplement with real-work
    tasks when they come up — real work always outranks the suite.
 2. **Taste — internal briefs + human judgment.** `./run-trial.sh <model> v1/taste-1` (UI) and
    `v1/taste-2` (API design); the runner records the output for human blind-compare against the

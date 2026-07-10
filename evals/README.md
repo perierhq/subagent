@@ -51,9 +51,9 @@ Use the aside CLI (load the `aside-browser` skill) to search x.com for real-worl
 
 ## 3. Hands-on scoring — internal trial suite
 
-Candidate models are trialed against a **private task holdout** (`run-trial.sh`; tasks live in
-`$SUBAGENT_TASKS_DIR`, default `~/.subagent/eval-tasks`, deliberately outside this repo so they
-can't end up in training data). Intelligence/agentic tasks are mechanically checked; taste briefs
+Candidate models are trialed against a **private task holdout** (`run-trial.sh`; tasks live in the private sibling repo
+`subagent-evals` — clone it next to this repo, or set `SUBAGENT_TASKS_DIR` — deliberately outside
+this public repo so they can't end up in training data). Intelligence/agentic tasks are mechanically checked; taste briefs
 are human-judged. Only task IDs and pass/fail records are published, in [`trials/`](trials/).
 See [`CANDIDATES.md`](CANDIDATES.md) for the graduation protocol.
 
