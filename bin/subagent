@@ -47,7 +47,7 @@ resolve_model() {
     case "$m" in
       */*) ;; # already provider-qualified
       gpt-*)                           m="openai-codex/$m" ;;
-      sonnet-*|opus-*|fable-*|haiku-*) m="anthropic/claude-$m" ;;
+      sonnet-*|opus-*|fable-*|haiku-*) m="anthropic/claude-${m//./-}" ;;
       grok-*)                          m="xai-oauth/$m" ;;
     esac
   fi
