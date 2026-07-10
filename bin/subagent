@@ -15,7 +15,8 @@
 #   --bg <name>       run in background; log: /tmp/agent-<name>.log
 #
 # Model shorthands: gpt-* → openai-codex/gpt-*; sonnet-*/opus-*/fable-*/haiku-* → anthropic/claude-*;
-# names with "/" pass through; custom mappings in ~/.config/subagent/models (shorthand=provider/model).
+# grok-* → xai-auth/grok-*; names with "/" pass through; custom mappings in
+# ~/.config/subagent/models (shorthand=provider/model).
 #
 # Examples:
 #   subagent gpt-5.5 "Task: implement the spec"
@@ -25,7 +26,7 @@
 
 set -euo pipefail
 
-VERSION="0.4.0"
+VERSION="0.5.0"
 REPO="kacperkwapisz/subagent"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
 RUN_DIR="${TMPDIR:-/tmp}/subagent"
@@ -47,6 +48,7 @@ resolve_model() {
       */*) ;; # already provider-qualified
       gpt-*)                           m="openai-codex/$m" ;;
       sonnet-*|opus-*|fable-*|haiku-*) m="anthropic/claude-$m" ;;
+      grok-*)                          m="xai-auth/$m" ;;
     esac
   fi
   echo "$m"
@@ -96,9 +98,10 @@ cmd_wait() {
 
 cmd_models() {
   echo "built-in prefixes:"
-  echo "  gpt-*                          -> openai-codex/gpt-*"
+  echo "  gpt-*                           -> openai-codex/gpt-*"
   echo "  sonnet-*|opus-*|fable-*|haiku-* -> anthropic/claude-*"
-  echo "  anything with '/'              -> passed through unchanged"
+  echo "  grok-*                          -> xai-auth/grok-*"
+  echo "  anything with '/'               -> passed through unchanged"
   if [[ -s "$CONFIG" ]]; then
     echo "custom ($CONFIG):"
     sed 's/^/  /' "$CONFIG"

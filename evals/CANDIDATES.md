@@ -15,9 +15,23 @@ Evaluated 2026-07-10. Evidence: [`results/`](results/).
 
 `?` = taste unverified (no hands-on yet).
 
-## Graduation checklist (per model)
+## Graduation protocol (per model)
 
-- [ ] Hands-on: at least one real bulk/mechanical task (int check)
-- [ ] Hands-on: at least one user-facing task (taste check)
-- [ ] Re-check sentiment ≥2 weeks post-launch (nerf/regression reports)
-- [ ] Add row to `skills/subagent/SKILL.md`, remove from this file, bump `VERSION`
+A candidate graduates only when all three pass. Record each trial in [`trials/`](trials/) using the template.
+
+1. **Intelligence — real bulk task.** Route a real task from actual work to the candidate
+   (`subagent <candidate> --bg trial-<name> @spec.md`), not a synthetic exercise — synthetic
+   mini-benches are our own contamination. Verifiable outcome required (tests pass, invariants
+   hold). Pass = output meets the bar you'd accept from the incumbent for that task class.
+2. **Taste — real user-facing task.** UI component, API design, or copy. Optionally run the same
+   task on the incumbent and blind-compare. A verified taste≥8 model (fable-5/opus-4.8) may
+   screen/review, but the score is a human call.
+3. **Sentiment recheck — ≥2 weeks after model launch.** Rerun the shill-filtered X research
+   (launch-week data only samples hype and stress-tested quotas). Look specifically for: nerf
+   and regression reports, quota tightening, "switched back" takes.
+
+   Launch dates: gpt-5.6 family 2026-07-09, grok-4.5 2026-07-08 → recheck no earlier than **2026-07-22**.
+
+Then: move the row into `skills/subagent/SKILL.md` (drop the `?`), delete it here, bump `VERSION`
+in `bin/subagent`, commit. A failed trial stays recorded in `trials/` and the row keeps its
+provisional status (or is removed if the failure is disqualifying).
