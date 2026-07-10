@@ -6,6 +6,11 @@ The model rankings in [`skills/subagent/SKILL.md`](../skills/subagent/SKILL.md) 
 2. **Shill-filtered public sentiment from X** — what independent practitioners actually report
 3. **Hands-on use** — taste and real subscription cost
 
+**Disqualified sources (never counted, in any direction):**
+
+- Anything a model's own provider says about its model — launch posts, self-reported benchmarks, system cards, employee/DevRel posts, partner testimonials.
+- SWE-Bench Pro and every SWE-Bench-family benchmark; claims resting on SWE-Bench numbers are out too. (AA's indices are fine — independently run, no SWE-Bench components.)
+
 ## 1. Benchmark data (`aa-fetch.sh`)
 
 ```sh

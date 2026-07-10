@@ -5,6 +5,12 @@ Shill filtering applied: lab employees, partner testimonials, launch-day hype, a
 
 ---
 
+> **⚠️ Partially superseded (2026-07-10):** the GPT-5.6 and Grok 4.5 sections below counted
+> now-disqualified sources (provider system cards, provider benchmark summaries, SWE-Bench-family
+> claims, MarginLab SWE-Bench-Pro). See 2026-07-10-x-sentiment-rerun.md for the clean rerun.
+> The GPT-5.5 / Sonnet 5 / Opus 4.8 / Fable 5 sections remain valid after removing any
+> SWE-Bench-based lines.
+
 I filtered hard. X search API hit rate limits mid-run, so I used logged-in X for specific tweet fetches plus browser/web indexing to find X URLs. I did not count official launch posts, lab employees, partner testimonials, or receipt-less hype.
 
 1. GPT-5.5, OpenAI
