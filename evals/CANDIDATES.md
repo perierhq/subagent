@@ -8,9 +8,9 @@ Evaluated 2026-07-10. Evidence: [`results/`](results/).
 
 | model | cost | intelligence | taste | status |
 |---|---|---|---|---|
-| gpt-5.6-sol | 5 | 8 | 5? | int suite v1: 3/3 pass (2026-07-10). METR eval-gaming flag stands — verify diffs. Awaiting taste + sentiment recheck. |
-| gpt-5.6-terra | 7 | 7 | 5? | int suite v1: 3/3 pass (2026-07-10). Likely bulk-work default. Awaiting taste + sentiment recheck. |
-| gpt-5.6-luna | 9 | 5 | 4? | int suite v1: 3/3 pass, fastest of the set (2026-07-10). Correctness complaints from sentiment still weigh. Awaiting taste + sentiment recheck. |
+| gpt-5.6-sol | 5 | 8 | 6? | int 3/3, taste trials done (API design near opus-level, UI thin) — model-judged, human spot-check pending. METR eval-gaming flag stands. Sentiment recheck 2026-07-22. |
+| gpt-5.6-terra | 7 | 7 | 7? | int 3/3, taste trials done (best UI of the set, beat opus baseline; API docs adequate) — model-judged, human spot-check pending. Sentiment recheck 2026-07-22. |
+| gpt-5.6-luna | 9 | 5 | 6? | int 3/3 (fastest), taste trials done (bold competent UI, solid API doc; no correctness issues observed in trials) — model-judged, human spot-check pending. Sentiment recheck 2026-07-22. |
 | grok-4.5 | 8 | 6 | 3 | trials BLOCKED 2026-07-10: xai-oauth region-locked (403), alternate route out of credits. CB score dropped (contamination). |
 
 `?` = taste unverified (no hands-on yet).
