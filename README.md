@@ -85,7 +85,7 @@ These rankings come from hands-on use; [evals](evals/) to back them (and cover n
 
 ## Teaching your agents to use it
 
-Copy [`AGENTS.md`](AGENTS.md) (or the relevant section) into your global agent instructions (`~/.pi/agent/AGENTS.md`, `CLAUDE.md`, etc.) so your top-level agent knows when and how to delegate.
+Copy [`docs/AGENTS.md`](docs/AGENTS.md) (or the relevant section) into your global agent instructions (`~/.pi/agent/AGENTS.md`, `CLAUDE.md`, etc.) so your top-level agent knows when and how to delegate.
 
 ## License
 

@@ -25,4 +25,4 @@ evals/
 
 1. Add a shorthand if needed (`~/.config/subagent/models`).
 2. `./run.sh <model>` (once it exists).
-3. Update the table in `README.md` and `AGENTS.md`.
+3. Update the table in `README.md` and `docs/AGENTS.md`.
