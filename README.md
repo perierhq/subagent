@@ -73,7 +73,7 @@ The model rankings (cost / intelligence / taste) and delegation guidance live in
 - **Reviews** → high-intelligence model, read-only (`-r`), ideally a different provider than the implementer
 - Defaults, not limits: judge the output, escalate when it doesn't meet the bar
 
-Rankings come from hands-on use; [evals](evals/) to back them (and score new models) are in progress. When models change, the skill is updated and a re-run of the installer picks it up.
+Rankings combine [Artificial Analysis](https://artificialanalysis.ai) public benchmarks (intelligence, list price) with hands-on use (taste, real subscription cost) — see [evals/](evals/) for the methodology and the fetch script. When models change, the skill is updated and users pick it up with `subagent update`.
 
 ## How the pieces fit
 

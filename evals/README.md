@@ -1,28 +1,32 @@
 # evals
 
-Evals backing the model rankings in the [README](../README.md#picking-the-right-model). Work in progress.
+The model rankings in [`skills/subagent/SKILL.md`](../skills/subagent/SKILL.md) are not run in-house. Intelligence and list-price data come from [Artificial Analysis](https://artificialanalysis.ai), who benchmark this better than we could; the remaining axes come from hands-on use.
 
-## Goal
+## How the three axes are sourced
 
-Turn the cost / intelligence / taste table from vibes into measurements, and make it cheap to re-score when new models land.
+| axis | source |
+|---|---|
+| **intelligence** | Artificial Analysis [Intelligence Index](https://artificialanalysis.ai/models) — bucketed onto the 1–9 scale |
+| **cost** | what you *actually pay* (subscription plans, generous provider limits), with AA list prices as the reference point. This is inherently personal — adjust for your own plans. |
+| **taste** | hand-scored from real usage (UI/UX output, code quality, API design, copy). Not something public benchmarks measure well; arena-style leaderboards are a weak secondary signal. |
 
-## Planned structure
+## Updating the rankings / adding a model
 
-```
-evals/
-  tasks/          # one dir per task: prompt.md + rubric.md + any fixtures
-  results/        # <model>/<task>/ raw transcripts + scores
-  run.sh          # subagent <model> ... across tasks/, judged by a strong model
-```
+1. Fetch current benchmark data:
 
-## Axes
+   ```sh
+   AA_API_KEY=... ./aa-fetch.sh            # all models by intelligence index
+   AA_API_KEY=... ./aa-fetch.sh claude     # filter by name
+   ```
 
-- **intelligence** — hard, unsupervised, verifiable tasks (bugs with failing tests, spec-to-passing-implementation)
-- **taste** — UI/UX output, API design, copy; judged pairwise by a strong model + human spot-checks
-- **cost** — actual $ per solved task at my subscription rates, not list price
+   (free API key: <https://artificialanalysis.ai/api>)
 
-## Adding a model
+2. Bucket the intelligence index onto 1–9 relative to the models already in the table.
+3. Score cost from your actual plan pricing; score taste after real use on user-facing work.
+4. Update the table in [`skills/subagent/SKILL.md`](../skills/subagent/SKILL.md) (single source of truth).
+5. If needed, add a shorthand to the built-in prefixes in `bin/subagent` or document a `~/.config/subagent/models` mapping.
+6. Bump `VERSION` in `bin/subagent`, commit — users pick it up with `subagent update`.
 
-1. Add a shorthand if needed (`~/.config/subagent/models`).
-2. `./run.sh <model>` (once it exists).
-3. Update the table in `skills/subagent/SKILL.md`.
+## Attribution
+
+Intelligence and pricing data: [Artificial Analysis](https://artificialanalysis.ai), used per their [API attribution terms](https://artificialanalysis.ai/api). Not affiliated.
