@@ -19,13 +19,18 @@ Evaluated 2026-07-10. Evidence: [`results/`](results/).
 
 A candidate graduates only when all three pass. Record each trial in [`trials/`](trials/) using the template.
 
-1. **Intelligence — real bulk task.** Route a real task from actual work to the candidate
-   (`subagent <candidate> --bg trial-<name> @spec.md`), not a synthetic exercise — synthetic
-   mini-benches are our own contamination. Verifiable outcome required (tests pass, invariants
-   hold). Pass = output meets the bar you'd accept from the incumbent for that task class.
-2. **Taste — real user-facing task.** UI component, API design, or copy. Optionally run the same
-   task on the incumbent and blind-compare. A verified taste≥8 model (fable-5/opus-4.8) may
-   screen/review, but the score is a human call.
+1. **Intelligence — internal task suite.** Run the private holdout tasks (`./run-trial.sh <model>
+   v1/int-1`, `v1/int-2`, `v1/agent-1`) — mechanically checked (tests + invariants), reproducible,
+   and private so models can't train on them (same reason CursorBench keeps its tasks secret).
+   Task content lives in `$SUBAGENT_TASKS_DIR` (default `~/.subagent/eval-tasks`), never in this
+   repo; only task IDs and pass/fail results are public in `trials/`. Supplement with real-work
+   tasks when they come up — real work always outranks the suite.
+2. **Taste — internal briefs + human judgment.** `./run-trial.sh <model> v1/taste-1` (UI) and
+   `v1/taste-2` (API design); the runner records the output for human blind-compare against the
+   incumbent. A verified taste≥8 model (fable-5/opus-4.8) may screen, but the score is a human call.
+
+   Suites are versioned; results are only comparable within a suite version. If a model aces the
+   suite but underperforms on real work, assume the suite leaked and rotate to a new version.
 3. **Sentiment recheck — ≥2 weeks after model launch.** Rerun the shill-filtered X research
    (launch-week data only samples hype and stress-tested quotas). Look specifically for: nerf
    and regression reports, quota tightening, "switched back" takes.

@@ -49,7 +49,13 @@ Use the aside CLI (load the `aside-browser` skill) to search x.com for real-worl
 - **Include**: independent devs showing actual work — transcripts, diffs, failure reports, longitudinal ("used it for two weeks") takes.
 - Negative reports weigh more than positive ones; nobody gets paid to complain.
 
-## 3. Hands-on scoring
+## 3. Hands-on scoring — internal trial suite
+
+Candidate models are trialed against a **private task holdout** (`run-trial.sh`; tasks live in
+`$SUBAGENT_TASKS_DIR`, default `~/.subagent/eval-tasks`, deliberately outside this repo so they
+can't end up in training data). Intelligence/agentic tasks are mechanically checked; taste briefs
+are human-judged. Only task IDs and pass/fail records are published, in [`trials/`](trials/).
+See [`CANDIDATES.md`](CANDIDATES.md) for the graduation protocol.
 
 - **cost** — scored from AA list prices (input-weighted blend, since agentic work is input-heavy), so anyone can reproduce it. Independent receipts about effective price (tokenizer inflation, quota burn) adjust the score. If your subscription makes a model effectively free, bump its cost score locally.
 - **taste** — UI/UX output, code quality, API design, copy. No public benchmark measures this; score from real use.
