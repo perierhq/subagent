@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# subagent — pi with the always-args baked in. Everything else passes through.
+#
+#   subagent <model> [pi-args...] "prompt"
+#
+# Expands to: pi -p --no-session --model <model> [pi-args...] "prompt"
+#
+# Model shorthands (built-in): gpt-* → openai-codex/gpt-*;
+#   sonnet-*/opus-*/fable-*/haiku-* → anthropic/claude-*
+# Custom shorthands: ~/.config/subagent/models, one `shorthand=provider/model` per line.
+# Extras:
+#   -r, --ro          read-only tools (read,grep,find,ls)
+#   --bg <name>       run in background, log to /tmp/agent-<name>.log, print PID + log path
+#   --version         print version
+#
+# Examples:
+#   subagent gpt-5.5 "Task: implement the spec"
+#   subagent fable-5 -r "review the diff on this branch"
+#   subagent gpt-5.5 --thinking high @spec.md --bg worker "Task: implement the spec"
+
+set -euo pipefail
+
+VERSION="0.1.0"
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
+
+usage() { sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'; }
+
+[[ $# -ge 1 ]] || { usage; exit 1; }
+case "$1" in
+  -h|--help) usage; exit 0 ;;
+  --version) echo "subagent $VERSION"; exit 0 ;;
+esac
+[[ $# -ge 2 ]] || { usage; exit 1; }
+
+model="$1"; shift
+
+# 1) user-defined shorthands, 2) built-in prefixes, 3) pass through as-is
+resolved=""
+if [[ -f "$CONFIG" ]]; then
+  resolved="$(sed -n "s/^${model}=//p" "$CONFIG" | head -1)"
+fi
+if [[ -n "$resolved" ]]; then
+  model="$resolved"
+else
+  case "$model" in
+    */*) ;; # already provider-qualified
+    gpt-*)                           model="openai-codex/$model" ;;
+    sonnet-*|opus-*|fable-*|haiku-*) model="anthropic/claude-$model" ;;
+  esac
+fi
+
+bg_name=""
+args=(-p --no-session --model "$model")
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -r|--ro) args+=(--tools read,grep,find,ls); shift ;;
+    --bg)    bg_name="$2"; shift 2 ;;
+    *)       args+=("$1"); shift ;;
+  esac
+done
+
+if [[ -n "$bg_name" ]]; then
+  log="/tmp/agent-$bg_name.log"
+  pi "${args[@]}" > "$log" 2>&1 &
+  echo "pid=$! log=$log"
+else
+  exec pi "${args[@]}"
+fi
