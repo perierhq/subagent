@@ -15,7 +15,7 @@
 #   --bg <name>       run in background; log: /tmp/agent-<name>.log
 #
 # Model shorthands: gpt-* → openai-codex/gpt-*; sonnet-*/opus-*/fable-*/haiku-* → anthropic/claude-*;
-# grok-* → xai-auth/grok-*; names with "/" pass through; custom mappings in
+# grok-* → xai-oauth/grok-*; names with "/" pass through; custom mappings in
 # ~/.config/subagent/models (shorthand=provider/model).
 #
 # Examples:
@@ -48,7 +48,7 @@ resolve_model() {
       */*) ;; # already provider-qualified
       gpt-*)                           m="openai-codex/$m" ;;
       sonnet-*|opus-*|fable-*|haiku-*) m="anthropic/claude-$m" ;;
-      grok-*)                          m="xai-auth/$m" ;;
+      grok-*)                          m="xai-oauth/$m" ;;
     esac
   fi
   echo "$m"
@@ -100,7 +100,7 @@ cmd_models() {
   echo "built-in prefixes:"
   echo "  gpt-*                           -> openai-codex/gpt-*"
   echo "  sonnet-*|opus-*|fable-*|haiku-* -> anthropic/claude-*"
-  echo "  grok-*                          -> xai-auth/grok-*"
+  echo "  grok-*                          -> xai-oauth/grok-*"
   echo "  anything with '/'               -> passed through unchanged"
   if [[ -s "$CONFIG" ]]; then
     echo "custom ($CONFIG):"

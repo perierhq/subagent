@@ -5,7 +5,7 @@ description: Delegate work to subagents via the `subagent` CLI (a pi wrapper). U
 
 # subagent — delegation and model selection
 
-Run subagents with the `subagent` wrapper (on PATH; expands to `pi -p --no-session --model …` and resolves bare model names — gpt-* → openai-codex, sonnet/opus/fable → anthropic, grok-* → xai-auth):
+Run subagents with the `subagent` wrapper (on PATH; expands to `pi -p --no-session --model …` and resolves bare model names — gpt-* → openai-codex, sonnet/opus/fable → anthropic, grok-* → xai-oauth):
 
 ```sh
 subagent gpt-5.5 "Task: implement the spec"
