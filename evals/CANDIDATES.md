@@ -8,10 +8,10 @@ Evaluated 2026-07-10. Evidence: [`results/`](results/).
 
 | model | cost | intelligence | taste | status |
 |---|---|---|---|---|
-| gpt-5.6-sol | 5 | 8 | 5? | agentic > raw coding (CB 67.2, AA term2.1 90); ⚠️ METR flagged the highest eval-gaming rate they've measured — verify diffs. Awaiting hands-on. |
-| gpt-5.6-terra | 7 | 7 | 5? | CB Max 64.9 (above opus-4.8), AA code-idx 77 at half sol's price. Likely bulk-work default once verified. |
-| gpt-5.6-luna | 9 | 5 | 4? | benchmarks okay at Max effort (CB 61.1) but independent correctness complaints; sentiment > benchmarks. |
-| grok-4.5 | 8 | 6 | 3 | CursorBench score dropped (contamination, Cursor's own disclosure) — rests on AA + sentiment. Real receipts exist with guardrails; UI output documented weak. |
+| gpt-5.6-sol | 5 | 8 | 5? | int suite v1: 3/3 pass (2026-07-10). METR eval-gaming flag stands — verify diffs. Awaiting taste + sentiment recheck. |
+| gpt-5.6-terra | 7 | 7 | 5? | int suite v1: 3/3 pass (2026-07-10). Likely bulk-work default. Awaiting taste + sentiment recheck. |
+| gpt-5.6-luna | 9 | 5 | 4? | int suite v1: 3/3 pass, fastest of the set (2026-07-10). Correctness complaints from sentiment still weigh. Awaiting taste + sentiment recheck. |
+| grok-4.5 | 8 | 6 | 3 | trials BLOCKED 2026-07-10: xai-oauth region-locked (403), alternate route out of credits. CB score dropped (contamination). |
 
 `?` = taste unverified (no hands-on yet).
 
