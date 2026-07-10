@@ -31,6 +31,7 @@ Then: update the table in `skills/subagent/SKILL.md` (single source of truth), b
 ## Other repo rules
 
 - `skills/subagent/SKILL.md` is the single source of truth for rankings and delegation guidance; `README.md` and `docs/AGENTS.md` must not duplicate the table.
+- The skill ships only fully verified rows — no provisional scores, no warning emoji. Candidates under evaluation live in `evals/CANDIDATES.md` until they pass the graduation checklist (hands-on taste + intelligence verification).
 - `bin/subagent` stays a dependency-free bash script; test changes against a stubbed `pi` before committing.
 - Never commit API keys (`AA_API_KEY` etc.).
 - Attribute Artificial Analysis wherever their data is shown (their API terms require it).
