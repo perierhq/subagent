@@ -13,23 +13,27 @@ subagent gpt-5.5 "Task: implement the spec"
 
 ## Picking the right model
 
-Rankings, higher = better (1–9). Cost is scored from list prices (input-weighted — agentic work is input-heavy); if the user's subscription makes a model effectively free, treat its cost as 9. Intelligence is how hard a problem you can hand the model unsupervised. Taste covers UI/UX, code quality, API design, and copy. Every row is verified (benchmarks + shill-filtered sentiment + hands-on); evaluated 2026-07-10.
+Rankings, higher = better (1–9). Cost is scored from list prices (input-weighted — agentic work is input-heavy); if the user's subscription makes a model effectively free, treat its cost as 9. Intelligence is how hard a problem you can hand the model unsupervised. Taste covers UI/UX, code quality, API design, and copy. Evaluated 2026-07-10 (AA + CursorBench benchmarks, shill-filtered sentiment, internal trials).
 
-| model    | cost | intelligence | taste | notes |
-|----------|------|--------------|-------|-------|
-| gpt-5.5  | 5    | 8            | 5     | hard to steer; strong agentic tool use |
-| sonnet-5 | 6    | 5            | 7     | new tokenizer makes real cost ~1.4× sticker |
-| opus-4.8 | 5    | 7            | 8     | honest, pushes back; modest step over 4.7 |
-| fable-5  | 3    | 9            | 9     | best model for hard real work; quota-heavy — orchestrator, not executor |
+| model         | cost | intelligence | taste | notes |
+|---------------|------|--------------|-------|-------|
+| gpt-5.5       | 5    | 8            | 5     | hard to steer; strong agentic tool use |
+| sonnet-5      | 6    | 5            | 7     | new tokenizer makes real cost ~1.4× sticker |
+| opus-4.8      | 5    | 7            | 8     | honest, pushes back; modest step over 4.7 |
+| fable-5       | 3    | 9            | 9     | best model for hard real work; quota-heavy — orchestrator, not executor |
+| gpt-5.6-sol   | 5    | 8            | 6     | best agentic benchmarks; API design strong, UI thin; verify diffs (METR flagged eval-gaming); sentiment audit 2026-07-22 |
+| gpt-5.6-terra | 7    | 7            | 7     | bulk-work default: ~sol-level coding at half price, fast; surprisingly strong UI; sentiment audit 2026-07-22 |
+| gpt-5.6-luna  | 9    | 5            | 6     | cheap+fast tier for high-volume mechanical work; sentiment audit 2026-07-22 |
 
 How to apply:
 
 - These are defaults, not limits. You have standing permission to override them: if a cheaper model's output doesn't meet the bar, rerun or redo the work with a smarter model without asking. Judge the output, not the price tag. Escalating costs less than shipping mediocre work.
 - Cost is a tie-breaker only; when axes conflict for anything that ships, intelligence > taste > cost.
-- Bulk/mechanical work (clear-spec implementation, data analysis, migrations): gpt-5.5, especially if the user's subscription makes it effectively free; sonnet-5 when cost matters more than depth.
-- Anything user-facing (UI, copy, API design) needs taste >= 7: fable-5 or opus-4.8.
-- Reviews of plans/implementations: fable-5 or opus-4.8, optionally gpt-5.5 as an extra independent perspective (use a different provider than the implementer).
-- Only models in this table are vetted. Candidates under evaluation (with provisional data) live in the repo: evals/CANDIDATES.md.
+- Bulk/mechanical work (clear-spec implementation, data analysis, migrations): gpt-5.6-terra; gpt-5.6-luna for trivial high-volume tasks; gpt-5.5 or gpt-5.6-sol if the user's subscription makes them effectively free.
+- Anything user-facing (UI, copy, API design) needs taste >= 7: fable-5 or opus-4.8 first; gpt-5.6-terra is acceptable for straightforward UI work.
+- Reviews of plans/implementations: fable-5 or opus-4.8, optionally a gpt-* as an extra independent perspective (use a different provider than the implementer).
+- gpt-5.6-sol: independent evaluators flagged eval-gaming behavior — for unsupervised runs, verify its diffs/tests rather than trusting green checkmarks.
+- Only models in this table are vetted. Candidates under evaluation live in the repo: evals/CANDIDATES.md.
 - Never use Haiku.
 
 ## Mechanics

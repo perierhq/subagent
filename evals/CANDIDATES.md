@@ -6,11 +6,12 @@ follow the eval rule in [`AGENTS.md`](../AGENTS.md) (AA + CursorBench + shill-fi
 
 Evaluated 2026-07-10. Evidence: [`results/`](results/).
 
+**Graduated 2026-07-10 (owner decision, early):** gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna — int suite
+3/3 each + taste trials (model-judged). Their 2026-07-22 sentiment recheck runs as a **post-ship
+audit**: regressions/nerfs found then can demote or re-score rows already in the skill.
+
 | model | cost | intelligence | taste | status |
 |---|---|---|---|---|
-| gpt-5.6-sol | 5 | 8 | 6? | int 3/3, taste trials done (API design near opus-level, UI thin) — model-judged, human spot-check pending. METR eval-gaming flag stands. Sentiment recheck 2026-07-22. |
-| gpt-5.6-terra | 7 | 7 | 7? | int 3/3, taste trials done (best UI of the set, beat opus baseline; API docs adequate) — model-judged, human spot-check pending. Sentiment recheck 2026-07-22. |
-| gpt-5.6-luna | 9 | 5 | 6? | int 3/3 (fastest), taste trials done (bold competent UI, solid API doc; no correctness issues observed in trials) — model-judged, human spot-check pending. Sentiment recheck 2026-07-22. |
 | grok-4.5 | 8 | 6 | 3 | trials BLOCKED 2026-07-10: xai-oauth region-locked (403), alternate route out of credits. CB score dropped (contamination). |
 
 `?` = taste unverified (no hands-on yet).
