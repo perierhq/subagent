@@ -40,8 +40,17 @@ How to apply:
 
 - For work that doesn't require changes (investigation, review, data analysis), add `-r` for read-only tools: `subagent fable-5 -r "review the diff on this branch"`.
 - For long prompts/specs, write them to a file and pass with `@spec.md` instead of inlining. For hard unsupervised problems, add `--thinking high` (or `xhigh`).
-- Long-running agents: use `--bg <name>` to run in background logging to `/tmp/agent-<name>.log`, then poll with `tail` instead of blocking. Run parallel independent subagents (e.g. multiple reviewers) concurrently, each with its own `--bg` name.
-- For runs long enough that a crash would hurt, use raw `pi -p -n "<name>" …` (keeps the session) so it's resumable with `pi -r`.
+- Long-running agents — prefer tmux when installed (`command -v tmux`), especially for long or occasionally-interactive runs (research sessions, slow trials):
+
+  ```sh
+  tmux new -d -s "agent-<name>" 'subagent <model> … 2>&1 | tee /tmp/agent-<name>.log'
+  tmux capture-pane -pt "agent-<name>" | tail -20   # peek without attaching
+  tmux attach -t "agent-<name>"                     # take over interactively if it needs input
+  ```
+
+  You get both worlds: a live attachable session and a `tee`'d log to poll. Kill with `tmux kill-session -t <name>` when done.
+- Without tmux, fall back to `--bg <name>` (runs in background, logs to `/tmp/agent-<name>.log`), then `subagent logs <name> [-f]` / `subagent wait <name>` / `subagent ps` instead of blocking. Run parallel independent subagents (e.g. multiple reviewers) concurrently, each with its own session/name.
+- For runs long enough that a crash would hurt, use raw `pi -p -n "<name>" …` (keeps the session) so it's resumable with `pi -r` — inside tmux if available.
 - When parsing subagent output programmatically, add `--mode json` (newline-delimited events); plain `-p` output contains terminal escape codes.
 - All other pi flags pass through unchanged. Custom model shorthands live in `~/.config/subagent/models` (`shorthand=provider/model`, one per line).
 - Use relevant skills in subagent prompts — tell the subagent which skill to load if one applies.

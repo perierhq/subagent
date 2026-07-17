@@ -57,6 +57,12 @@ this public repo so they can't end up in training data). Intelligence/agentic ta
 are human-judged. Only task IDs and pass/fail records are published, in [`trials/`](trials/).
 See [`CANDIDATES.md`](CANDIDATES.md) for the graduation protocol.
 
+Slow trials run best in tmux (attachable + logged):
+
+```sh
+tmux new -d -s "trial-$m-$t" "./run-trial.sh $m $t 2>&1 | tee /tmp/trial-$m-$t.log"
+```
+
 - **cost** — scored from AA list prices (input-weighted blend, since agentic work is input-heavy), so anyone can reproduce it. Independent receipts about effective price (tokenizer inflation, quota burn) adjust the score. If your subscription makes a model effectively free, bump its cost score locally.
 - **taste** — UI/UX output, code quality, API design, copy. No public benchmark measures this; score from real use.
 
