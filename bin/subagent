@@ -26,7 +26,7 @@
 
 set -euo pipefail
 
-VERSION="0.7.0"
+VERSION="0.7.1"
 REPO="perierhq/subagent"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
 RUN_DIR="${TMPDIR:-/tmp}/subagent"
@@ -116,7 +116,7 @@ cmd_update() {
   local self; self="$(command -v subagent || echo "$0")"
   self="$(cd "$(dirname "$self")" && pwd)/$(basename "$self")"
   local tmp; tmp="$(mktemp)"
-  trap 'rm -f "$tmp"' EXIT
+  trap 'rm -f "${tmp:-}"' EXIT
 
   echo "current: $VERSION ($self)"
   curl -fsSL "$base/bin/subagent" -o "$tmp" || err "download failed"
@@ -135,6 +135,9 @@ cmd_update() {
       && echo "updated skill: $SKILL_DIR/SKILL.md" \
       || echo "warning: skill update failed" >&2
   fi
+  # exit from inside this already-parsed function: after install(1) replaced $self,
+  # bash must not read any further bytes from the (now different) script file
+  exit 0
 }
 
 cmd_run() {
