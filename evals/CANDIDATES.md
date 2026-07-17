@@ -12,7 +12,8 @@ audit**: regressions/nerfs found then can demote or re-score rows already in the
 
 | model | cost | intelligence | taste | status |
 |---|---|---|---|---|
-| grok-4.5 | 8 | 6 | 3 | trials BLOCKED 2026-07-10: xai-oauth region-locked (403), alternate route out of credits. CB score dropped (contamination). |
+| grok-4.5 | 8 | 6 | 6 | full eval 2026-07-17: int 3/3 (fastest recorded, 26-27s), taste trials solid (UI mid-field, API doc strong). Post-launch sentiment (med conf): fast cheap execution w/ real receipts, but short-sighted code and badly calibrated as reviewer (2/10 real findings) — never use for reviews. CB score remains dropped (contamination). |
+| kimi-k3 | 5 | 7 | 7 | full eval 2026-07-17 (via its creator's API): AA code-idx 76/term2.1 85 (fable territory), int 3/3, top-tier UI trial + sophisticated API doc. CAVEATS: extreme latency/verbosity (32min for one page; AA measured 130M output tokens in eval — inflates effective cost, hence cost 5 not 6), day-one sentiment (low conf) incl. complex-task error reports. No CursorBench row yet. |
 
 `?` = taste unverified (no hands-on yet).
 
