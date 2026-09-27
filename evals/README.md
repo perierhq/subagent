@@ -26,7 +26,13 @@ AA_API_KEY=... ./aa-fetch.sh -n 60        # top 60
 AA_API_KEY=... ./aa-fetch.sh claude       # filter by name
 ```
 
-(free API key: <https://artificialanalysis.ai/api>)
+(free API key: <https://artificialanalysis.ai/api>). To avoid exporting it every time, store it outside the repo:
+
+```sh
+mkdir -p ~/.config/subagent && (umask 077; printf %s "$AA_API_KEY" > ~/.config/subagent/aa-api-key)
+```
+
+`aa-fetch.sh` reads that file when `AA_API_KEY` is unset. Never commit the key.
 
 Columns pulled — agentic benchmarks matter most, since subagents run unsupervised:
 

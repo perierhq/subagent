@@ -3,6 +3,7 @@
 # to inform the rankings in skills/subagent/SKILL.md.
 #
 #   AA_API_KEY=... ./aa-fetch.sh [-n N] [name-filter]
+#   (or store the key once in ~/.config/subagent/aa-api-key, chmod 600 — never in this repo)
 #
 #   ./aa-fetch.sh                 # top 30 (by intelligence index, then coding index)
 #   ./aa-fetch.sh -n 60           # top 60
@@ -30,7 +31,9 @@
 
 set -euo pipefail
 
-[[ -n "${AA_API_KEY:-}" ]] || { echo "error: set AA_API_KEY (free key: https://artificialanalysis.ai/api)" >&2; exit 1; }
+KEY_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/aa-api-key"
+if [[ -z "${AA_API_KEY:-}" && -r "$KEY_FILE" ]]; then AA_API_KEY="$(tr -d '[:space:]' < "$KEY_FILE")"; fi
+[[ -n "${AA_API_KEY:-}" ]] || { echo "error: set AA_API_KEY or put the key in $KEY_FILE (chmod 600; free key: https://artificialanalysis.ai/api)" >&2; exit 1; }
 command -v jq >/dev/null || { echo "error: jq is required" >&2; exit 1; }
 
 top=30
