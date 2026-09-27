@@ -1,15 +1,17 @@
 # AA benchmark snapshot — 2026-09-27
 
 Source: [Artificial Analysis](https://artificialanalysis.ai) (independent LLM benchmarks), read from the
-public model pages (the leaderboard data embedded in `artificialanalysis.ai/models/<slug>`). No
-`AA_API_KEY` was available for `aa-fetch.sh` this round, so the column set follows what AA publishes today.
+public model pages (the leaderboard data embedded in `artificialanalysis.ai/models/<slug>`), then
+cross-checked against the v2 API with `aa-fetch.sh`. The API values match. **Terminal-Bench 4.0 isn't
+in the API**, so that column only comes from the website.
 
 **AA changed its suite since the 2026-07-10 snapshot** (Intelligence Index v4.3.2):
 
 - **Terminal-Bench 4.0** (`term4.0`) is the headline agentic-coding eval now. Weight it highest.
 - **τ³-Banking** (`tau3-bank`) replaces tau²-bench for agentic tool use.
-- **Coding Index, IFBench and LiveCodeBench** aren't published for models released after
-  mid-August 2026. Their columns are dropped here.
+- **Coding Index, IFBench and LiveCodeBench** are `null` in the API for models released after
+  mid-August 2026 (Opus 5.5, GPT-6 Sol/Luna, Grok 4.7). The old `aa-fetch.sh` filtered on Coding
+  Index, so it silently dropped those models. Fixed in the same commit as this file.
 - Intelligence Index values were rescaled. Don't compare them with the July snapshot (Fable 5
   was 60 then and is 50 now).
 
@@ -75,5 +77,23 @@ effort levels per model:
 | GPT-6 Luna (medium) | 2026-09-22 | current | 29 | 3 | - | - | 51 | 78 | 0.1 | 0.5 | 0.02 |
 | Claude Sonnet 5 (medium) | 2026-06-30 | current | 28 | 2 | - | - | 52 | 74 | 2 | 10 | 1.00 |
 | GPT-5.6 Luna (medium) | 2026-07-09 | deprecated → gpt-6-luna-medium | 25 | 1 | 53 | 18 | 47 | 75 | 0.2 | 1.2 | 0.02 |
+
+Coding Index and output speed from the API (`aa-fetch.sh`), for models that still have the index.
+Highest effort level shown:
+
+| model | code-idx | tok/s |
+|---|---|---|
+| Claude Fable 5.1 (max) | 82 | 71 |
+| GPT-6 Astra (max / high) | 77 / 77 | 62 / 57 |
+| GPT-5.6 Terra (max) | 77 | 98 |
+| Muse Spark 1.3 (xhigh / max) | 77 / 76 | 333 / 164 |
+| Gemini 3.8 Flash (high) | 76 | 304 |
+| Kimi K3 (max) | 76 | 35 |
+| Grok 4.6 (high) | 77 | 79 |
+| Claude Sonnet 5 (max) | 72 | 87 |
+| Claude Opus 5.5 (max) | — (not published) | 99 |
+| GPT-6 Sol (max) | — | 87 |
+| GPT-6 Luna (max) | — | 152 |
+| Grok 4.7 (xhigh) | — | 71 |
 
 Source: Artificial Analysis <https://artificialanalysis.ai> (independent LLM benchmarks).

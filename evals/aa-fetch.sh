@@ -4,16 +4,21 @@
 #
 #   AA_API_KEY=... ./aa-fetch.sh [-n N] [name-filter]
 #
-#   ./aa-fetch.sh                 # top 30 by coding index
+#   ./aa-fetch.sh                 # top 30 (by coding index, then intelligence index)
 #   ./aa-fetch.sh -n 60           # top 60
 #   ./aa-fetch.sh claude          # only models matching "claude"
-#   ./aa-fetch.sh -n 999 ""       # everything with a coding index
+#   ./aa-fetch.sh -n 999 ""       # everything with a coding or intelligence index
+#
+# AA stopped publishing the Coding Index (and tau2/IFBench/LCB/TB 2.1 for some) for models released
+# after mid-Aug 2026, so models are kept if they have EITHER index. Terminal-Bench 4.0, AA's current
+# headline agentic-coding eval, is not in the v2 API: read it from the model pages on the website.
 #
 # Columns (all 0-100 unless noted):
 #   code-idx   AA Coding Index (composite)
 #   term2.1    Terminal-Bench 2.1  — agentic coding in a real terminal
 #   term-hard  Terminal-Bench Hard — agentic coding, hard subset
-#   tau2       tau²-bench          — agentic tool use
+#   tau2       tau²-bench          — agentic tool use (retired by AA; older models only)
+#   tau3b      τ³-Banking          — agentic tool use (current)
 #   lcb        LiveCodeBench       — competitive coding
 #   sci        SciCode             — scientific code generation
 #   if         IFBench             — instruction following
@@ -38,10 +43,12 @@ jq -r --arg f "$filter" --argjson n "$top" '
   def idx: if . == null then "-" else (. + 0.5 | floor) end;   # indices are already 0-100
   .data
   | map(select(((.name // .id // "") | test($f; "i"))
-               and (.evaluations.artificial_analysis_coding_index != null)))
-  | sort_by(-(.evaluations.artificial_analysis_coding_index // 0))
+               and ((.evaluations.artificial_analysis_coding_index != null)
+                    or (.evaluations.artificial_analysis_intelligence_index != null))))
+  | sort_by(-(.evaluations.artificial_analysis_coding_index // 0),
+            -(.evaluations.artificial_analysis_intelligence_index // 0))
   | .[:$n]
-  | (["model", "creator", "code-idx", "term2.1", "term-hard", "tau2", "lcb", "sci", "if", "lcr", "intel", "$/1M in", "$/1M out", "tok/s"] | @tsv),
+  | (["model", "creator", "code-idx", "term2.1", "term-hard", "tau2", "tau3b", "lcb", "sci", "if", "lcr", "intel", "$/1M in", "$/1M out", "tok/s"] | @tsv),
     (.[] | [
       (.name // .id),
       (.model_creator.name // "-"),
@@ -49,6 +56,7 @@ jq -r --arg f "$filter" --argjson n "$top" '
       (.evaluations.terminalbench_v2_1 | pct),
       (.evaluations.terminalbench_hard | pct),
       (.evaluations.tau2 | pct),
+      (.evaluations.tau_banking | pct),
       (.evaluations.livecodebench | pct),
       (.evaluations.scicode | pct),
       (.evaluations.ifbench | pct),
