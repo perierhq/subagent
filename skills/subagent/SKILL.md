@@ -19,7 +19,7 @@ Rankings, higher = better (1–9). Cost is scored from list prices (input-weight
 |---------------|------|--------------|-------|-------|
 | opus-5.5      | 5    | 9            | 8     | top of AA intelligence, Terminal-Bench 4.0 and CursorBench 4.0; honest, pushes back; `--thinking high` is the value point, max effort is very verbose |
 | fable-5.1     | 3    | 9            | 9     | best taste; now trails opus-5.5 on agentic benchmarks at 2.5× the price; quota-heavy — orchestrator, not executor |
-| gpt-6-sol     | 7    | 8            | 6     | half gpt-5.6-sol's price; agentic scores drop steeply below the top thinking level, so use `--thinking xhigh`; API design strong, UI thin; verify diffs |
+| gpt-6-sol     | 7    | 8            | 6     | half gpt-5.6-sol's price; run at the highest thinking level available: the score holds at `--thinking xhigh` (AA intel 44, Terminal-Bench 4.0 30 — on par with gpt-5.6-sol at xhigh), and AA's max level scores higher (48 / 44); below xhigh agentic scores drop steeply; API design strong, UI thin; verify diffs |
 | sonnet-5      | 6    | 5            | 7     | new tokenizer makes real cost ~1.4× sticker |
 | gpt-5.6-terra | 7    | 7            | 7     | bulk-work default: fast, surprisingly strong UI |
 | gpt-6-luna    | 9    | 5            | 6     | cheap+fast tier for high-volume mechanical work |

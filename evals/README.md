@@ -21,7 +21,7 @@ Everything else is unscored. Independent evaluator reports (METR etc.) may add q
 ## 1. Benchmark data (`aa-fetch.sh`)
 
 ```sh
-AA_API_KEY=... ./aa-fetch.sh              # top 30 by AA Coding Index
+AA_API_KEY=... ./aa-fetch.sh              # top 30 by AA Intelligence Index
 AA_API_KEY=... ./aa-fetch.sh -n 60        # top 60
 AA_API_KEY=... ./aa-fetch.sh claude       # filter by name
 ```
