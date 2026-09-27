@@ -2,7 +2,8 @@
 
 Source: [Artificial Analysis](https://artificialanalysis.ai) (independent LLM benchmarks), read from the
 public model pages (the leaderboard data embedded in `artificialanalysis.ai/models/<slug>`), then
-cross-checked against the v2 API with `aa-fetch.sh`. The API values match. **Terminal-Bench 4.0 isn't
+cross-checked against the v2 API with `aa-fetch.sh` (key provided mid-round). Intel, SciCode, LCR,
+Terminal-Bench 2.1, τ³-Banking (`tau_banking`) and prices match the website values. **Terminal-Bench 4.0 isn't
 in the API**, so that column only comes from the website.
 
 **AA changed its suite since the 2026-07-10 snapshot** (Intelligence Index v4.3.2):

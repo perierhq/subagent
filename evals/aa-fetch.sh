@@ -4,7 +4,7 @@
 #
 #   AA_API_KEY=... ./aa-fetch.sh [-n N] [name-filter]
 #
-#   ./aa-fetch.sh                 # top 30 (by coding index, then intelligence index)
+#   ./aa-fetch.sh                 # top 30 (by intelligence index, then coding index)
 #   ./aa-fetch.sh -n 60           # top 60
 #   ./aa-fetch.sh claude          # only models matching "claude"
 #   ./aa-fetch.sh -n 999 ""       # everything with a coding or intelligence index
@@ -45,8 +45,8 @@ jq -r --arg f "$filter" --argjson n "$top" '
   | map(select(((.name // .id // "") | test($f; "i"))
                and ((.evaluations.artificial_analysis_coding_index != null)
                     or (.evaluations.artificial_analysis_intelligence_index != null))))
-  | sort_by(-(.evaluations.artificial_analysis_coding_index // 0),
-            -(.evaluations.artificial_analysis_intelligence_index // 0))
+  | sort_by(-(.evaluations.artificial_analysis_intelligence_index // 0),
+            -(.evaluations.artificial_analysis_coding_index // 0))
   | .[:$n]
   | (["model", "creator", "code-idx", "term2.1", "term-hard", "tau2", "tau3b", "lcb", "sci", "if", "lcr", "intel", "$/1M in", "$/1M out", "tok/s"] | @tsv),
     (.[] | [

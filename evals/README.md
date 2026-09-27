@@ -41,7 +41,7 @@ Columns pulled — agentic benchmarks matter most, since subagents run unsupervi
 | `lcr` | LCR | long context reasoning |
 | `intel` | AA Intelligence Index | overall (context only, never the rating) |
 
-> **2026-09 AA suite change:** AA now leads with **Terminal-Bench 4.0** and **τ³-Banking** (tau² is retired), and doesn't publish the Coding Index, IFBench or LiveCodeBench for new models. Those columns will show `-` for models released after mid-August 2026. The script's API field names for the new evals haven't been verified (it needs a key). See [`results/2026-09-27-aa-benchmarks.md`](results/2026-09-27-aa-benchmarks.md) for the current columns.
+> **2026-09 AA suite change:** AA now leads with **Terminal-Bench 4.0** and **τ³-Banking** (tau² is retired), and doesn't publish the Coding Index, IFBench or LiveCodeBench for new models. `aa-fetch.sh` now ranks by Intelligence Index (every model has it) and shows τ³-Banking as `tau3b` (API field `tau_banking`, verified 2026-09-27). Terminal-Bench 4.0 is **not in the v2 API**; read it from the model pages. See [`results/2026-09-27-aa-benchmarks.md`](results/2026-09-27-aa-benchmarks.md).
 
 ## 2. X sentiment research
 
