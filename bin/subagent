@@ -19,14 +19,14 @@
 # ~/.config/subagent/models (shorthand=provider/model).
 #
 # Examples:
-#   subagent gpt-5.5 "Task: implement the spec"
-#   subagent fable-5 -r "review the diff on this branch"
-#   subagent gpt-5.5 --thinking high @spec.md --bg worker "Task: implement the spec"
+#   subagent gpt-6-sol "Task: implement the spec"
+#   subagent opus-5.5 -r "review the diff on this branch"
+#   subagent gpt-6-sol --thinking high @spec.md --bg worker "Task: implement the spec"
 #   subagent wait worker && subagent logs worker
 
 set -euo pipefail
 
-VERSION="0.7.1"
+VERSION="0.8.0"
 REPO="perierhq/subagent"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/subagent/models"
 RUN_DIR="${TMPDIR:-/tmp}/subagent"
