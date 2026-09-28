@@ -29,13 +29,13 @@ npm install -g @earendil-works/pi-coding-agent
 
 ```sh
 # bulk/mechanical work
-subagent gpt-5.5 "Task: implement the spec"
+subagent gpt-6-sol "Task: implement the spec"
 
 # read-only investigation / review
-subagent fable-5 -r "review the diff on this branch"
+subagent opus-5.5 -r "review the diff on this branch"
 
 # long spec from a file, hard problem, run in background
-subagent gpt-5.5 --thinking high @spec.md --bg worker "Task: implement the spec"
+subagent gpt-6-sol --thinking high @spec.md --bg worker "Task: implement the spec"
 tail -f /tmp/agent-worker.log
 ```
 
@@ -68,7 +68,7 @@ k2=moonshot/kimi-k2
 
 The model rankings (cost / intelligence / taste) and delegation guidance live in the skill — [`skills/subagent/SKILL.md`](skills/subagent/SKILL.md) — which is the single source of truth. Short version:
 
-- **Bulk/mechanical work** → cheapest model that clears the bar (currently `gpt-5.5`)
+- **Bulk/mechanical work** → cheapest model that clears the bar (currently `gpt-5.6-terra` / `gpt-6-sol`)
 - **Anything user-facing** (UI, copy, API design) → high-taste model
 - **Reviews** → high-intelligence model, read-only (`-r`), ideally a different provider than the implementer
 - Defaults, not limits: judge the output, escalate when it doesn't meet the bar

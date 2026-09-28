@@ -21,12 +21,18 @@ Everything else is unscored. Independent evaluator reports (METR etc.) may add q
 ## 1. Benchmark data (`aa-fetch.sh`)
 
 ```sh
-AA_API_KEY=... ./aa-fetch.sh              # top 30 by AA Coding Index
+AA_API_KEY=... ./aa-fetch.sh              # top 30 by AA Intelligence Index
 AA_API_KEY=... ./aa-fetch.sh -n 60        # top 60
 AA_API_KEY=... ./aa-fetch.sh claude       # filter by name
 ```
 
-(free API key: <https://artificialanalysis.ai/api>)
+(free API key: <https://artificialanalysis.ai/api>). To avoid exporting it every time, store it outside the repo:
+
+```sh
+mkdir -p ~/.config/subagent && (umask 077; printf %s "$AA_API_KEY" > ~/.config/subagent/aa-api-key)
+```
+
+`aa-fetch.sh` reads that file when `AA_API_KEY` is unset. Never commit the key.
 
 Columns pulled — agentic benchmarks matter most, since subagents run unsupervised:
 
@@ -40,6 +46,8 @@ Columns pulled — agentic benchmarks matter most, since subagents run unsupervi
 | `if` | IFBench | instruction following |
 | `lcr` | LCR | long context reasoning |
 | `intel` | AA Intelligence Index | overall (context only, never the rating) |
+
+> **2026-09 AA suite change:** AA now leads with **Terminal-Bench 4.0** and **τ³-Banking** (tau² is retired), and doesn't publish the Coding Index, IFBench or LiveCodeBench for new models. `aa-fetch.sh` now ranks by Intelligence Index (every model has it) and shows τ³-Banking as `tau3b` (API field `tau_banking`, verified 2026-09-27). Terminal-Bench 4.0 is **not in the v2 API**; read it from the model pages. See [`results/2026-09-27-aa-benchmarks.md`](results/2026-09-27-aa-benchmarks.md).
 
 ## 2. X sentiment research
 

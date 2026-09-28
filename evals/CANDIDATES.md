@@ -4,16 +4,35 @@ Provisional assessments live here, never in `skills/subagent/SKILL.md`. A candid
 skill table only after hands-on verification of taste and intelligence on real work. Scores below
 follow the eval rule in [`AGENTS.md`](../AGENTS.md) (AA + CursorBench + shill-filtered X sentiment).
 
-Evaluated 2026-07-10. Evidence: [`results/`](results/).
+Last updated 2026-09-27. Evidence: [`results/`](results/).
 
-**Graduated 2026-07-10 (owner decision, early):** gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna — int suite
-3/3 each + taste trials (model-judged). Their 2026-07-22 sentiment recheck runs as a **post-ship
-audit**: regressions/nerfs found then can demote or re-score rows already in the skill.
+**Graduated 2026-09-27 (owner decision, early — deprecation swap):** AA lists five skill rows as
+deprecated, so each was replaced by its successor: opus-4.8 → opus-5.5, fable-5 → fable-5.1,
+gpt-5.5 + gpt-5.6-sol → gpt-6-sol, gpt-5.6-luna → gpt-6-luna. grok-4.7 was added too, as the successor of
+the fully evaluated grok-4.5 (grok-4.5 taste 6 carried over; its reviewer-calibration warning ships as a
+risk note). Cost and intelligence come from the
+2026-09-27 AA + CursorBench 4.0 data; **taste is carried over from each predecessor** and not yet verified.
+Post-ship audit (can demote or re-score): int suite + taste trials, and the sentiment recheck
+≥ 2026-10-06 (fable-5.1 eligible now). gpt-6-sol keeps gpt-5.6-sol's METR eval-gaming note until then.
+
+**Graduated 2026-07-10 (owner decision, early):** gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna, each
+passing the int suite 3/3 plus model-judged taste trials. The 2026-07-22 post-ship sentiment audit
+has no record in `results/`.
+
+Round 2026-09-27 is **benchmark-only** (AA website + v2 API, CursorBench 4.0). This environment had
+no `pi`, no private suite and no X access, so taste is `?` and intelligence scores are benchmark-provisional
+until the int suite and sentiment recheck run.
 
 | model | cost | intelligence | taste | status |
 |---|---|---|---|---|
-| grok-4.5 | 8 | 6 | 6 | full eval 2026-07-17: int 3/3 (fastest recorded, 26-27s), taste trials solid (UI mid-field, API doc strong). Post-launch sentiment (med conf): fast cheap execution w/ real receipts, but short-sighted code and badly calibrated as reviewer (2/10 real findings) — never use for reviews. CB score remains dropped (contamination). |
-| kimi-k3 | 5 | 7 | 7 | full eval 2026-07-17 (via its creator's API): AA code-idx 76/term2.1 85 (fable territory), int 3/3, top-tier UI trial + sophisticated API doc. CAVEATS: extreme latency/verbosity (32min for one page; AA measured 130M output tokens in eval — inflates effective cost, hence cost 5 not 6), day-one sentiment (low conf) incl. complex-task error reports. No CursorBench row yet. |
+| gpt-6-astra | 3 | 9 | ? | released 2026-09-03. OpenAI's new top tier at $10/$50. AA intel 53, term4.0 60 (xhigh, tied top), term2.1 89, tau3-bank 43. **No CursorBench score yet**, so this rests on AA only. Recheck eligible now. |
+| grok-composer-2.5-fast | ? | ? | ? | added 2026-09-28 at owner request. **No allowlisted data:** AA doesn't list it, and its only CursorBench entry ("Composer 2.5", 27.7%, $0.68/task) is Cursor's own model on Cursor's own benchmark, so it's disqualified as a provider claim. Scores can only come from the int suite, taste trials and sentiment. Runs today as `subagent grok-composer-2.5-fast` (→ `xai-oauth/grok-composer-2.5-fast`); the provider id is unverified here (no pi). |
+| muse-spark-1.3 | 8 | 7 | ? | released 2026-09-02 (Meta). $1.25/$4.25. AA intel 48, term4.0 33, tau3-bank 51 (top), CB 4.0 41.6% at $2.64/task. Needs a shorthand mapping and a pi provider before trials. Recheck eligible now. |
+| gemini-3.8-flash | 8 | 6 | ? | released 2026-09-02. $0.75/$3.75, but very verbose on CB ($4.70/task, 162k tokens), so cost 8. AA intel 41, term4.0 20, term2.1 88, CB 39.6%. A candidate for the bulk tier against gpt-5.6-terra. Needs a shorthand mapping and a pi provider. Recheck eligible now. |
+| kimi-k3 | 5 | 7 | 7 | full eval 2026-07-17 (via its creator's API): int 3/3, top-tier UI trial and a sophisticated API doc. AA code-idx 76, term2.1 85, intel 44, LCR 89 (highest in the snapshot). **2026-09-27 risk note:** AA Terminal-Bench 4.0 is only 13, weak on the new long-horizon agentic eval. Intelligence stays 7 (one benchmark doesn't outweigh the hands-on 3/3); re-score if a new int-suite run or sentiment confirms it. No CursorBench score. Earlier caveats still apply: extreme latency and verbosity (32 min for one page), plus complex-task error reports. |
+
+Removed 2026-09-27: **grok-4.5**, which AA lists as deprecated (→ grok-4.6 → grok-4.7). Its reviewer-calibration
+finding carries over as a risk note on grok-4.7.
 
 `?` = taste unverified (no hands-on yet).
 
@@ -36,7 +55,9 @@ A candidate graduates only when all three pass. Record each trial in [`trials/`]
    (launch-week data only samples hype and stress-tested quotas). Look specifically for: nerf
    and regression reports, quota tightening, "switched back" takes.
 
-   Launch dates: gpt-5.6 family 2026-07-09, grok-4.5 2026-07-08 → recheck no earlier than **2026-07-22**.
+   Launch dates: fable-5.1 2026-09-01, muse-spark-1.3 / gemini-3.8-flash 2026-09-02, gpt-6-astra 2026-09-03
+   → recheck eligible now. grok-4.7 2026-09-21, opus-5.5 / gpt-6-sol / gpt-6-luna 2026-09-22 → recheck no
+   earlier than **2026-10-06**.
 
 Then: move the row into `skills/subagent/SKILL.md` (drop the `?`), delete it here, bump `VERSION`
 in `bin/subagent`, commit. A failed trial stays recorded in `trials/` and the row keeps its
