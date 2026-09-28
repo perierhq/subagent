@@ -22,7 +22,7 @@ Rankings, higher = better (1–9). Cost is scored from list prices (input-weight
 | gpt-6-sol     | 7    | 8            | 6     | half gpt-5.6-sol's price; run at the highest thinking level available: the score holds at `--thinking xhigh` (AA intel 44, Terminal-Bench 4.0 30 — on par with gpt-5.6-sol at xhigh), and AA's max level scores higher (48 / 44); below xhigh agentic scores drop steeply; API design strong, UI thin; verify diffs |
 | sonnet-5      | 6    | 5            | 7     | new tokenizer makes real cost ~1.4× sticker |
 | gpt-5.6-terra | 7    | 7            | 7     | bulk-work default: fast, surprisingly strong UI |
-| grok-4.7      | 7    | 7            | 6     | fast, cheap list price ($2/$6) but verbose; best non-Anthropic CursorBench 4.0 score; `--thinking high` is nearly as good as xhigh; never use for reviews (predecessor was badly calibrated as a reviewer) |
+| grok-4.7      | 7    | 7            | 6     | cheap list price ($2/$6) but verbose and not fast (AA: ~71 tok/s); best non-Anthropic CursorBench 4.0 score; `--thinking high` is nearly as good as xhigh; never use for reviews (predecessor was badly calibrated as a reviewer) |
 | gpt-6-luna    | 9    | 5            | 6     | cheap+fast tier for high-volume mechanical work |
 
 How to apply:
