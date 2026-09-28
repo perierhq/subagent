@@ -13,7 +13,7 @@ subagent gpt-6-sol "Task: implement the spec"
 
 ## Picking the right model
 
-Rankings, higher = better (1–9). Cost is scored from list prices (input-weighted — agentic work is input-heavy); if the user's subscription makes a model effectively free, treat its cost as 9. Intelligence is how hard a problem you can hand the model unsupervised. Taste covers UI/UX, code quality, API design, and copy. Evaluated 2026-07-10 (AA + CursorBench benchmarks, shill-filtered sentiment, internal trials); deprecated models replaced by their successors 2026-09-27 on AA + CursorBench 4.0 data, with taste carried over from each predecessor until the post-ship trials and sentiment audit.
+Rankings, higher = better (1–9). Cost is scored from list prices (input-weighted — agentic work is input-heavy); if the user's subscription makes a model effectively free, treat its cost as 9. Intelligence is how hard a problem you can hand the model unsupervised. Taste covers UI/UX, code quality, API design, and copy. Evaluated 2026-07-10 (AA + CursorBench benchmarks, shill-filtered sentiment, internal trials); deprecated models replaced by their successors (plus grok-4.7, successor of the evaluated grok-4.5) 2026-09-27 on AA + CursorBench 4.0 data, with taste carried over from each predecessor until the post-ship trials and sentiment audit.
 
 | model         | cost | intelligence | taste | notes |
 |---------------|------|--------------|-------|-------|
@@ -22,6 +22,7 @@ Rankings, higher = better (1–9). Cost is scored from list prices (input-weight
 | gpt-6-sol     | 7    | 8            | 6     | half gpt-5.6-sol's price; run at the highest thinking level available: the score holds at `--thinking xhigh` (AA intel 44, Terminal-Bench 4.0 30 — on par with gpt-5.6-sol at xhigh), and AA's max level scores higher (48 / 44); below xhigh agentic scores drop steeply; API design strong, UI thin; verify diffs |
 | sonnet-5      | 6    | 5            | 7     | new tokenizer makes real cost ~1.4× sticker |
 | gpt-5.6-terra | 7    | 7            | 7     | bulk-work default: fast, surprisingly strong UI |
+| grok-4.7      | 7    | 7            | 6     | fast, cheap list price ($2/$6) but verbose; best non-Anthropic CursorBench 4.0 score; `--thinking high` is nearly as good as xhigh; never use for reviews (predecessor was badly calibrated as a reviewer) |
 | gpt-6-luna    | 9    | 5            | 6     | cheap+fast tier for high-volume mechanical work |
 
 How to apply:
@@ -30,7 +31,7 @@ How to apply:
 - Cost is a tie-breaker only; when axes conflict for anything that ships, intelligence > taste > cost.
 - Bulk/mechanical work (clear-spec implementation, data analysis, migrations): gpt-5.6-terra or gpt-6-sol (same price tier, gpt-6-sol is smarter at its top thinking level); gpt-6-luna for trivial high-volume tasks.
 - Anything user-facing (UI, copy, API design) needs taste >= 7: fable-5.1 or opus-5.5 first; gpt-5.6-terra is acceptable for straightforward UI work.
-- Reviews of plans/implementations: opus-5.5 or fable-5.1, optionally a gpt-* as an extra independent perspective (use a different provider than the implementer).
+- Reviews of plans/implementations: opus-5.5 or fable-5.1, optionally a gpt-* as an extra independent perspective (use a different provider than the implementer). Not grok-4.7.
 - gpt-6-sol: independent evaluators flagged eval-gaming behavior in its predecessor gpt-5.6-sol — until the audit clears it, verify its diffs/tests on unsupervised runs rather than trusting green checkmarks.
 - Only models in this table are vetted. Candidates under evaluation live in the repo: evals/CANDIDATES.md.
 - Never use Haiku.
